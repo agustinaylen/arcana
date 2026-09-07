@@ -1,5 +1,5 @@
 ---
-title: "División y Conquista: El Martillo y la Trampa"
+title: El Martillo y la Trampa
 tags:
   - hub
   - sendero
