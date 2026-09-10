@@ -187,18 +187,94 @@ Esta organización permite combinar diferentes bloques para obtener una suma pre
 ## 2. Operaciones y complejidad
 
 ### Operaciones principales
-- Lista de operaciones con nombres estandarizados (por ejemplo: push/pop/peek, insert/delete/find, append/concat, union/intersect).
-- Para cada operación: breve descripción de lo que hace.
+
+Las operaciones principales de un Fenwick Tree están relacionadas con la consulta y modificación de sumas.
+
+- **`add(i, valor)` / actualización puntual:** incrementa el valor almacenado en la posición `i` en una determinada cantidad. Para mantener actualizadas las sumas parciales, se modifican las posiciones del Fenwick Tree que contienen a `i` dentro de su intervalo.
+
+- **`prefixSum(i)` / suma prefija:** calcula la suma de todos los elementos desde la posición `1` hasta la posición `i`. Para hacerlo, combina los intervalos almacenados en diferentes posiciones del Fenwick Tree.
+
+- **`rangeSum(l, r)` / suma de rango:** obtiene la suma de los elementos comprendidos entre las posiciones `l` y `r`. Se calcula utilizando dos sumas prefijas:
+
+```text id="k3v1s8"
+rangeSum(l, r) = prefixSum(r) - prefixSum(l - 1)
+```
+
+Por ejemplo, si se quiere obtener la suma entre las posiciones `3` y `6`:
+
+```text id="jq8nqz"
+A[3] + A[4] + A[5] + A[6]
+
+= prefixSum(6) - prefixSum(2)
+```
+
+- **`get(i)` / obtener valor individual:** si se utiliza la estructura únicamente con actualizaciones incrementales, el valor de una posición puede obtenerse mediante una diferencia de sumas prefijas:
+
+```text id="2j84y5"
+get(i) = prefixSum(i) - prefixSum(i - 1)
+```
 
 ### Complejidad
-- Por operación: tiempo (peor/ promedio/ amortizado) y complejidad espacial adicional.
-- Notas sobre costos ocultos (reallocs, rehash, recorridos, copias).
 
-### Detalles operativos 
-- Casos especiales: operaciones en estructura vacía/llena, duplicados, orden, límites de tamaño.
-- Comportamiento en concurrencia o fallos (si aplica).
+| Operación | Tiempo | Espacio adicional |
+| :--- | :---: | :---: |
+| `add(i, valor)` | `O(log n)` | `O(1)` |
+| `prefixSum(i)` | `O(log n)` | `O(1)` |
+| `rangeSum(l, r)` | `O(log n)` | `O(1)` |
+| `get(i)` | `O(log n)` | `O(1)` |
+| Almacenamiento de la estructura | — | `O(n)` |
 
-Debe responder a: "¿qué puedo hacer y cuánto cuesta?"
+Las operaciones `add` y `prefixSum` tienen una complejidad de `O(log n)` porque en cada paso se modifica el índice utilizando el valor obtenido mediante `Lowbit(i)`.
+
+Para calcular una suma prefija, el índice disminuye:
+
+```text id="h0w7i2"
+i = i - Lowbit(i)
+```
+
+mientras que para realizar una actualización puntual aumenta:
+
+```text id="s7p1a4"
+i = i + Lowbit(i)
+```
+
+En ambos casos, la cantidad de posiciones recorridas está acotada por `O(log n)`.
+
+La operación `rangeSum` realiza dos consultas `prefixSum`, por lo que:
+
+```text id="w0g8ra"
+O(log n) + O(log n) = O(log n)
+```
+
+manteniendo una complejidad total de `O(log n)`.
+
+### Detalles operativos
+
+El Fenwick Tree utiliza normalmente **índices desde 1**. La posición `0` se reserva como condición de finalización de los recorridos y no representa un elemento del arreglo.
+
+Por ejemplo, al calcular una suma prefija:
+
+```text id="g0q8qj"
+mientras i > 0:
+    utilizar BIT[i]
+    i = i - Lowbit(i)
+```
+
+el recorrido finaliza cuando `i` llega a `0`.
+
+Una actualización funciona de manera inversa:
+
+```text id="3qj4q8"
+mientras i <= n:
+    actualizar BIT[i]
+    i = i + Lowbit(i)
+```
+
+y finaliza cuando el índice supera el tamaño `n`.
+
+El Fenwick Tree almacena **O(n)** valores adicionales, uno por cada posición utilizada por la estructura. No necesita crear nodos ni utilizar referencias o punteros, lo que permite una representación compacta en memoria.
+
+Estas complejidades suponen que la operación utilizada es una suma y que las actualizaciones son **puntuales**. Si el problema requiere otro tipo de operación o actualizaciones sobre rangos, pueden ser necesarias variantes del Fenwick Tree o una estructura diferente.
 
 ## 3. Implementación
 
