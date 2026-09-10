@@ -10,7 +10,7 @@ alias:
 ## 1. Qué es y cómo funciona
 
 ### Intuición
-- **Idea central:** Es una estructura de datos de tipo arbol pero que busca optimizar el problema de hacer operaciones sobre los elementos de un array, para asi bajar la complejidad de estas operaciones. Basicamente es un arbol con los resultados precargados de realizar operaciones sobre un array (tipicamente sumas por Ejemplo). 
+- **Idea central:** Un Árbol Indexado Binario (Fenwick Tree o Binary Indexed Tree) es una estructura de datos basada en un arreglo que permite realizar de manera eficiente operaciones sobre rangos de elementos, especialmente sumas prefijas, mientras se mantienen actualizaciones puntuales.
 - **Problema que resuelve:** Una situación común en la cual nos podemos encontrar es en querer operar sobre los elementos de un array, por ejemplo hacer una sumatoria sobre todos los elementos de un array de números. Lo cual es costoso en términos de rendimiento porque para cada vez que queramos calcularlo habría una complejidad algorítmica de O(n). Esta estructura de datos lo que propone es precargar los resultados de esa sumatoria en un árbol para poder acceder a los resultados de las sumatorias del array o de rangos en particular del mismo de manera optima, la complejidad con esta estructura crece en torno a O(log n).
 
 ### Definición / propiedades
